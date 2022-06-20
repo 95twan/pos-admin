@@ -1,4 +1,3 @@
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
@@ -26,7 +25,7 @@ const Register = ({error}) => {
     }
 
     return (
-        <Container>
+        <>
             <Row className="mt-2">
                 <Col xs={12}>
                     <CgArrowLeft size="32" color={iconColor} cursor="pointer" onClick={goBack}
@@ -68,7 +67,7 @@ const Register = ({error}) => {
                     </Form>
                 </Col>
             </Row>
-        </Container>
+        </>
     );
 };
 

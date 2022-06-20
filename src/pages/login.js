@@ -1,4 +1,3 @@
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
@@ -7,7 +6,7 @@ import {useNavigate} from "react-router-dom";
 import {CgArrowLeft} from "react-icons/cg";
 import {useState} from "react"
 
-const Login = ({error}) => {
+const Login = ({error, setLogin}) => {
     const [iconColor, setIconColor] = useState('gray')
 
     const navigate = useNavigate();
@@ -24,8 +23,13 @@ const Login = ({error}) => {
         setIconColor('gray');
     }
 
+    const login = () => {
+        setLogin(true);
+        navigate('/');
+    }
+
     return (
-        <Container>
+        <>
             <Row className="mt-2">
                 <Col xs={12}>
                     <CgArrowLeft size="32" color={iconColor} cursor="pointer" onClick={goBack}
@@ -53,13 +57,13 @@ const Login = ({error}) => {
                             <Form.Label>비밀번호</Form.Label>
                             <Form.Control type="password"/>
                         </Form.Group>
-                        <Button variant="primary" type="button">
+                        <Button variant="primary" type="button" onClick={login}>
                             로그인
                         </Button>
                     </Form>
                 </Col>
             </Row>
-        </Container>
+        </>
     );
 };
 
