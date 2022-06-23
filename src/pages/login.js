@@ -3,25 +3,10 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import {useNavigate} from "react-router-dom";
-import {CgArrowLeft} from "react-icons/cg";
-import {useState} from "react"
+import GoBackButton from "../components/goBackButton";
 
 const Login = ({error, setLogin}) => {
-    const [iconColor, setIconColor] = useState('gray')
-
     const navigate = useNavigate();
-
-    const goBack = () => {
-        navigate(-1);
-    }
-
-    const onMouseOver = () => {
-        setIconColor('black');
-    }
-
-    const onMouseOut = () => {
-        setIconColor('gray');
-    }
 
     const login = () => {
         setLogin(true);
@@ -30,12 +15,7 @@ const Login = ({error, setLogin}) => {
 
     return (
         <>
-            <Row className="mt-2">
-                <Col xs={12}>
-                    <CgArrowLeft size="32" color={iconColor} cursor="pointer" onClick={goBack}
-                                 onMouseOver={onMouseOver} onMouseOut={onMouseOut}/>
-                </Col>
-            </Row>
+            <GoBackButton goBackUrl={'/'}/>
             <Row className="mt-4">
                 <Col xs={12} className="text-center">
                     <h1>로그인</h1>

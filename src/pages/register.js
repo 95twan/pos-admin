@@ -2,36 +2,12 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import {useNavigate} from "react-router-dom";
-import {CgArrowLeft} from "react-icons/cg"
-import {useState} from "react";
+import GoBackButton from "../components/goBackButton";
 
 const Register = ({error}) => {
-
-    const [iconColor, setIconColor] = useState('gray')
-
-    const navigate = useNavigate();
-
-    const goBack = () => {
-        navigate(-1);
-    }
-
-    const onMouseOver = () => {
-        setIconColor('black');
-    }
-
-    const onMouseOut = () => {
-        setIconColor('gray');
-    }
-
     return (
         <>
-            <Row className="mt-2">
-                <Col xs={12}>
-                    <CgArrowLeft size="32" color={iconColor} cursor="pointer" onClick={goBack}
-                                 onMouseOver={onMouseOver} onMouseOut={onMouseOut}/>
-                </Col>
-            </Row>
+            <GoBackButton goBackUrl={'/'}/>
             <Row className="mt-4">
                 <Col xs={12} className="text-center">
                     <h1>회원가입</h1>
@@ -48,6 +24,9 @@ const Register = ({error}) => {
                         <Form.Group className="mb-3" controlId="user-id">
                             <Form.Label>아이디</Form.Label>
                             <Form.Control type="text"/>
+                            <Button variant="primary" type="button">
+                                중복확인
+                            </Button>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="user-eamil">
                             <Form.Label>이메일</Form.Label>
