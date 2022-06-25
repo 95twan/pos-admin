@@ -8,12 +8,18 @@ import GoBackButton from "../components/goBackButton";
 import axios from "axios";
 import {API_HOST} from "../lib/env";
 import usePromise from "../lib/usePromise";
+import {deleteMenu} from "../lib/menuHandler";
+import {deleteImage} from "../lib/imageHandler";
+import {uploadImage} from "../lib/imageHandler";
 
 const MenuDetail = () => {
     const {menuId} = useParams()
     const [readOnly, setReadOnly] = useState(true);
     const [menu, setMenu] = useState({});
     const [categories, setCategories] = useState([]);
+    const [image, setImage] = useState('');
+    const [imageName, setImageName] = useState('')
+    const [file, setFile] = useState('')
     const [loading, response, error] = usePromise(() => {
         return axios.get(`${API_HOST}/menus/${menuId}`);
     }, [menuId])
@@ -36,18 +42,26 @@ const MenuDetail = () => {
         });
     }
 
+    const onChangeFile = (e) => {
+        const file = e.target.files[0];
+        setFile(file);
+        setImageName(file.name);
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        return new Promise((resolve) => {
+            reader.onload = () => {
+                setImage(reader.result);
+                resolve();
+            }
+        });
+    }
+
     const navigate = useNavigate();
 
-    const updateMenu = () => {
-        setReadOnly(false);
-    }
-
-    const completeUpdate = () => {
-        setReadOnly(true);
-    }
-
-    const deleteMenu = () => {
-        navigate('/menu-list');
+    const onClickDeleteMenu = () => {
+        deleteMenu(menuId, menu.imageUrl, () => {
+            navigate('/menu-list')
+        })
     }
 
     useEffect(() => {
@@ -63,6 +77,37 @@ const MenuDetail = () => {
         });
     }
 
+    const completeUpdate = () => {
+        if (image !== '') {
+            deleteImage(menu.imageUrl, () => {
+                uploadImage(file, imageName, (url) => {
+                    setMenu({
+                        ...menu,
+                        imageUrl: url
+                    })
+                    setImage('')
+                });
+            });
+        }
+
+        if (!menu.imageUrl) return;
+
+        if (!(menu.name && menu.categoryId && menu.price && menu.additionalPrice && menu.stock && (menu.hidden === true || menu.hidden === false))) {
+            return alert("모든 데이터를 입력해주세요!");
+        }
+
+        axios.put(`${API_HOST}/menus/${menuId}`, menu, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(() => {
+                setReadOnly(true);
+            }).catch(() => {
+
+        })
+    }
+
     return (loading || !response || error ? null :
             <>
                 <GoBackButton goBackUrl={'/menu-list'}/>
@@ -71,9 +116,10 @@ const MenuDetail = () => {
                         <Form.Group className="mb-3" controlId="image">
                             <Form.Label>메뉴 이미지</Form.Label>
                             <div className="mb-2">
-                                <img src={menu.imageUrl || ''} alt={menu.name || ''} style={{width: "128px", height:"128px", objectFit: "contain"}}/>
+                                <img src={image || menu.imageUrl || ''} alt={menu.name || ''}
+                                     style={{width: "128px", height: "128px", objectFit: "contain"}}/>
                             </div>
-                            <Form.Control type="file" disabled={readOnly}/>
+                            <Form.Control type="file" onChange={onChangeFile} disabled={readOnly}/>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="category">
                             <Form.Label>메뉴 카테고리</Form.Label>
@@ -113,11 +159,22 @@ const MenuDetail = () => {
                         </Form.Group>
                         <div>
                             {readOnly ?
-                                <Button className="me-2" variant="primary" type="button" onClick={updateMenu}>메뉴
-                                    수정</Button>
-                                : <Button className="me-2" variant="primary" type="button"
-                                          onClick={completeUpdate}>완료</Button>}
-                            <Button variant="danger" type="button" onClick={deleteMenu}>메뉴 삭제</Button>
+                                <Button
+                                    className="me-2"
+                                    variant="primary"
+                                    type="button"
+                                    onClick={() => setReadOnly(false)}>
+                                    메뉴수정
+                                </Button>
+                                :
+                                <>
+                                    <Button className="me-2" variant="primary" type="button"
+                                            onClick={completeUpdate}>완료</Button>
+                                    <Button className="me-2" variant="secondary" type="button"
+                                            onClick={() => setReadOnly(true)}>취소</Button>
+                                </>
+                            }
+                            <Button variant="danger" type="button" onClick={onClickDeleteMenu}>메뉴 삭제</Button>
                         </div>
                     </Col>
                 </Row>

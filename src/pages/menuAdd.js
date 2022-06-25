@@ -6,11 +6,11 @@ import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react"
 import GoBackButton from "../components/goBackButton";
 import axios from "axios";
-import storage, {API_HOST} from "../lib/env";
-import {ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
+import {API_HOST} from "../lib/env";
+import {uploadImage} from "../lib/imageHandler";
 
 const MenuAdd = () => {
-    const [menu, setMenu] = useState({hidden:false});
+    const [menu, setMenu] = useState({hidden: false});
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
     const [image, setImage] = useState('');
@@ -56,35 +56,17 @@ const MenuAdd = () => {
         });
     }
 
-    const uploadImage = () => {
-        if (!file) {
-            return alert("이미지를 선택해주세요!");
-        }
-        const menuImageRef = ref(storage, `menu-image/${imageName}`);
-        const uploadTask = uploadBytesResumable(menuImageRef, file);
-
-        uploadTask.on(
-            "state_changed",
-            () => {
-            },
-            (err) => console.log(err),
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                    setMenu({
-                        ...menu,
-                        imageUrl: url
-                    })
-                })
-            }
-        );
-    }
-
     const addMenu = () => {
-        uploadImage();
+        uploadImage(file, imageName, (url) => {
+            setMenu({
+                ...menu,
+                imageUrl: url
+            })
+        });
 
         if (!menu.imageUrl) return;
 
-        if (!(menu.name && menu.categoryId && menu.price && menu.additionalPrice && menu.stock && (menu.hidden === true || menu.hidden === false ))){
+        if (!(menu.name && menu.categoryId && menu.price && menu.additionalPrice && menu.stock && (menu.hidden === true || menu.hidden === false))) {
             return alert("모든 데이터를 입력해주세요!");
         }
 
@@ -93,8 +75,8 @@ const MenuAdd = () => {
                 'Content-Type': 'application/json'
             }
         })
-            .then(() => {
-                navigate('/menu-list');
+            .then((res) => {
+                navigate(`/menu-detail/${res.data.id}`);
             }).catch(() => {
 
         })

@@ -7,6 +7,7 @@ import GoBackButton from "../components/goBackButton";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {API_HOST} from "../lib/env";
+import {deleteMenu} from "../lib/menuHandler";
 
 const MenuList = () => {
     const navigate = useNavigate();
@@ -31,13 +32,37 @@ const MenuList = () => {
         navigate('/menu-add')
     }
 
-    const actions = (
-        <>
-            <button type="button" className="btn btn-primary me-2">품절처리</button>
-            <button type="button" className="btn btn-success me-2">숨기기</button>
-            <button type="button" className="btn btn-danger me-2">삭제</button>
-        </>
-    )
+    const onClickDeleteMenu = (e, menu) => {
+        e.stopPropagation();
+        deleteMenu(menu.id, menu.imageUrl, () => {
+            window.location.replace('/menu-list')
+        })
+    }
+
+    const actions = (menu) => {
+        return (
+            <>
+                <button
+                    type="button"
+                    className="btn btn-primary me-2"
+                    onClick={(e) => e.stopPropagation()}>
+                    품절처리
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-success me-2"
+                    onClick={(e) => e.stopPropagation()}>
+                    숨기기
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-danger me-2"
+                    onClick={(e) => onClickDeleteMenu(e, menu)}>
+                    삭제
+                </button>
+            </>
+        )
+    }
 
     return (
         <>
@@ -62,7 +87,7 @@ const MenuList = () => {
                                 <td>{menu.price.toLocaleString('ko-KR')}원</td>
                                 <td>{menu.stock.toLocaleString('ko-KR')}개</td>
                                 <td>
-                                    {actions}
+                                    {actions(menu)}
                                 </td>
                             </tr>
                         ))}
