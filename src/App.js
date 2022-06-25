@@ -6,6 +6,7 @@ import Container from "react-bootstrap/Container";
 import {useState} from "react";
 import MenuList from "./pages/menuList";
 import MenuDetail from "./pages/menuDetail";
+import MenuAdd from "./pages/menuAdd";
 
 const App = () => {
     const [login, setLogin] = useState(false)
@@ -18,6 +19,7 @@ const App = () => {
                 <Route path="/register" element={<Register/>}/>
                 <Route path="/menu-list" element={<MenuList/>}/>
                 <Route path="/menu-detail/:menuId" element={<MenuDetail/>}/>
+                <Route path="/menu-add" element={<MenuAdd/>}/>
             </Routes>
         </Container>
     );

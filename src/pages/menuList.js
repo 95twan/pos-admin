@@ -11,20 +11,7 @@ import {API_HOST} from "../lib/env";
 const MenuList = () => {
     const navigate = useNavigate();
 
-    const [menus, setMenus] = useState([
-        {
-            id: 1,
-            name: "싸이버거",
-            price: 5900,
-            stock: 999
-        },
-        {
-            id: 2,
-            name: "불고기버거",
-            price: 4900,
-            stock: 764
-        }
-    ])
+    const [menus, setMenus] = useState([]);
 
     useEffect(() => {
         axios.get(`${API_HOST}/menus`)
@@ -38,6 +25,10 @@ const MenuList = () => {
 
     const toMenuDetail = (menuId) => {
         navigate(`/menu-detail/${menuId}`);
+    }
+
+    const toMenuAdd = () => {
+        navigate('/menu-add')
     }
 
     const actions = (
@@ -81,7 +72,7 @@ const MenuList = () => {
             </Row>
             <Row>
                 <Col xs={12}>
-                    <Button variant="primary" type="button">메뉴 추가</Button>
+                    <Button variant="primary" type="button" onClick={toMenuAdd}>메뉴 추가</Button>
                 </Col>
             </Row>
         </>

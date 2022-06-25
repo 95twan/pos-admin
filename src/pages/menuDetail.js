@@ -18,7 +18,6 @@ const MenuDetail = () => {
         return axios.get(`${API_HOST}/menus/${menuId}`);
     }, [menuId])
 
-
     useEffect(() => {
         axios.get(`${API_HOST}/categories`)
             .then(res => {
@@ -53,7 +52,6 @@ const MenuDetail = () => {
 
     useEffect(() => {
         if (response) {
-            console.log(response.data)
             setMenu(response.data)
         }
     }, [response])
@@ -71,12 +69,14 @@ const MenuDetail = () => {
                 <Row className="mt-4">
                     <Col xs={12}>
                         <Form.Group className="mb-3" controlId="image">
-                            <Form.Label>이미지</Form.Label>
-                            <img src={menu.imageUrl || ''} alt={menu.name}/>
+                            <Form.Label>메뉴 이미지</Form.Label>
+                            <div className="mb-2">
+                                <img src={menu.imageUrl || ''} alt={menu.name || ''} style={{width: "128px", height:"128px", objectFit: "contain"}}/>
+                            </div>
                             <Form.Control type="file" disabled={readOnly}/>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="category">
-                            <Form.Label>카테고리</Form.Label>
+                            <Form.Label>메뉴 카테고리</Form.Label>
                             <Form.Select name="categoryId" value={menu.categoryId || ''} onChange={onChange}
                                          disabled={readOnly}>
                                 {categories.map(category => (
@@ -85,23 +85,23 @@ const MenuDetail = () => {
                             </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="name">
-                            <Form.Label>메뉴</Form.Label>
+                            <Form.Label>메뉴 이름</Form.Label>
                             <Form.Control type="text" name="name" value={menu.name || ''} onChange={onChange}
                                           readOnly={readOnly}/>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="price">
-                            <Form.Label>가격</Form.Label>
+                            <Form.Label>메뉴 가격</Form.Label>
                             <Form.Control type="text" name="price" value={menu.price || ''} onChange={onChange}
                                           readOnly={readOnly}/>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="additional-price">
-                            <Form.Label>추가 가격</Form.Label>
+                            <Form.Label>세트 구성 시 추가금</Form.Label>
                             <Form.Control type="text" name="additionalPrice" value={menu.additionalPrice || 0}
                                           onChange={onChange} readOnly={readOnly}/>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="stock">
                             <Form.Label>재고</Form.Label>
-                            <Form.Control type="text" name="stock" value={menu.stock || ''} onChange={onChange}
+                            <Form.Control type="text" name="stock" value={menu.stock || 0} onChange={onChange}
                                           readOnly={readOnly}/>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="hidden">
