@@ -4,6 +4,6 @@ WORKDIR /app
 COPY . .
 RUN yarn install
 
-EXPOSE 3002
+EXPOSE 8002
 
 ENTRYPOINT ["yarn", "start"]
