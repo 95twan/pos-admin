@@ -1,16 +1,16 @@
 import {initializeApp} from "firebase/app";
 import {getStorage} from "firebase/storage";
 
-export const API_HOST = 'http://127.0.0.1:8002/api'
+export const API_HOST = process.env["REACT_APP_POS_SERVER_API_HOST"]
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBKDscwoq7XlOZ1VZhBzG21FBuzQLQWu-8",
-    authDomain: "pos-project-62037.firebaseapp.com",
-    projectId: "pos-project-62037",
-    storageBucket: "pos-project-62037.appspot.com",
-    messagingSenderId: "785504791066",
-    appId: "1:785504791066:web:b35fa31e08a8806a03ffa3",
-    measurementId: "G-0RVV3328Z2"
+    apiKey: process.env["REACT_APP_API_KEY"],
+    authDomain: process.env["REACT_APP_AUTH_DOMAIN"],
+    projectId: process.env["REACT_APP_PROJECT_ID"],
+    storageBucket: process.env["REACT_APP_STORAGE_BUCKET"],
+    messagingSenderId: process.env["REACT_APP_MESSAGING_SENDER_ID"],
+    appId: process.env["REACT_APP_APP_ID"],
+    measurementId: process.env["REACT_APP_MEASUREMENT_ID"]
 };
 
 const app = initializeApp(firebaseConfig);
